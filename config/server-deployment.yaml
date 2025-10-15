@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadtest-server
+  namespace: default
+  labels:
+    app: loadtest-server
+spec:
+  selector:
+    matchLabels:
+      app: loadtest-server
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: loadtest-server
+    spec:
+      containers:
+        - name: loadtest-server
+          image: itspeetah/np-load-test:dev2
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 1000Mi
+            limits:
+              cpu: 14000m
+              memory: 1000Mi
+          ports:
+            - containerPort: 8080
+              name: loadtest-server
+      restartPolicy: Always

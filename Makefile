@@ -65,3 +65,24 @@ kill-compose:
 
 kill-server:
 	@if [ $$(docker ps -a -q -f name=$(IMAGE) | wc -l) -ge 1 ]; then docker rm -f $(IMAGE); fi
+
+
+
+# ==============================
+#           NEW STUFF
+# ==============================
+
+REPOSITORY = itspeetah
+FRONTEND_NAME = np-load-test
+FRONTEND_TAG = dev2
+FRONTEND_IMAGE = $(REPOSITORY)/$(FRONTEND_NAME):$(FRONTEND_TAG)
+
+FRONTEND_PLATFORM = linux/arm64,linux/amd64
+# FRONTEND_PLATFORM = linux/amd64
+
+.PHONY: build-server push-server
+build-server:
+	docker buildx build -t $(FRONTEND_IMAGE) --platform=$(FRONTEND_PLATFORM) .
+
+push-server:
+	docker push $(FRONTEND_IMAGE)
